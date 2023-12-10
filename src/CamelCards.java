@@ -5,7 +5,7 @@ import java.util.*;
 import java.util.Set;
 import java.util.stream.Collectors;
 
-enum Type{
+enum Type {
     FIVE_OF_A_KIND,
     FOUR_OF_A_KIND,
     FULL_HOUSE,
@@ -16,11 +16,64 @@ enum Type{
     ERROR
 }
 
+class SortByStrength implements Comparator<String> {
 
-class SortByHand implements Comparator<Hand>{
+    private ArrayList<String> strengthRanking;
+
+    public SortByStrength() {
+        this.strengthRanking = new ArrayList<>();
+        strengthRanking.add("A");
+        strengthRanking.add("K");
+        strengthRanking.add("Q");
+        strengthRanking.add("J");
+        strengthRanking.add("T");
+        strengthRanking.add("9");
+        strengthRanking.add("8");
+        strengthRanking.add("7");
+        strengthRanking.add("6");
+        strengthRanking.add("5");
+        strengthRanking.add("4");
+        strengthRanking.add("3");
+        strengthRanking.add("2");
+    }
+
+    @Override
+    public int compare(String o1, String o2) {
+        return strengthRanking.indexOf(o2) - strengthRanking.indexOf(o1);
+    }
+}
+
+class SortByStrength2 implements Comparator<String> {
+
+    private ArrayList<String> strengthRanking;
+
+    public SortByStrength2() {
+        this.strengthRanking = new ArrayList<>();
+        strengthRanking.add("A");
+        strengthRanking.add("K");
+        strengthRanking.add("Q");
+        strengthRanking.add("T");
+        strengthRanking.add("9");
+        strengthRanking.add("8");
+        strengthRanking.add("7");
+        strengthRanking.add("6");
+        strengthRanking.add("5");
+        strengthRanking.add("4");
+        strengthRanking.add("3");
+        strengthRanking.add("2");
+        strengthRanking.add("J");
+    }
+
+    @Override
+    public int compare(String o1, String o2) {
+        return strengthRanking.indexOf(o2) - strengthRanking.indexOf(o1);
+    }
+}
+
+class SortByHand implements Comparator<Hand> {
 
     private ArrayList<Type> types;
-    private ArrayList<String> strengthRanking;
+    private SortByStrength sortByStrength;
 
 
     public SortByHand() {
@@ -34,58 +87,32 @@ class SortByHand implements Comparator<Hand>{
         types.add(Type.HIGH_CARD);
         types.add(Type.ERROR);
 
-        this.strengthRanking = new ArrayList<>();
-        strengthRanking.add("A");
-        strengthRanking.add("K");
-        strengthRanking.add("Q");
-        strengthRanking.add("J");
-        strengthRanking.add("T");
-        strengthRanking.add("9");
-        strengthRanking.add("8");
-        strengthRanking.add("7");
-        strengthRanking.add("6");
-        strengthRanking.add("5");
-        strengthRanking.add("4");
-        strengthRanking.add("3");
-        strengthRanking.add("2");
+        sortByStrength = new SortByStrength();
 
     }
 
     @Override
     public int compare(Hand o1, Hand o2) {
         int result = types.indexOf(o2.getType()) - types.indexOf(o1.getType());
-        if (result!=0)
+        if (result != 0)
             return result;
 
         CamelCard[] o1Cards = o1.getCards();
         CamelCard[] o2Cards = o2.getCards();
 
-        StringBuilder sb = new StringBuilder();
-
-        for (int i = 0; i < 5; i++)
-            sb.append(o1Cards[i]);
-        sb.append(" vs ");
-        for (int i = 0; i < 5; i++)
-            sb.append(o2Cards[i]);
-
-        System.out.println(sb);
-
-
         for (int i = 0; i < 5; i++) {
-            result = strengthRanking.indexOf(o2Cards[i].getStrength()) - strengthRanking.indexOf(o1Cards[i].getStrength());
-
-            if(result!=0){
+            result = sortByStrength.compare(o1Cards[i].getStrength(), o2Cards[i].getStrength());
+            if (result != 0)
                 return result;
-            }
         }
         return result;
     }
 }
 
-class SortByHand2 implements Comparator<Hand>{
+class SortByHand2 implements Comparator<Hand> {
 
     private ArrayList<Type> types;
-    private ArrayList<String> strengthRanking;
+    private SortByStrength2 sortByStrength;
 
 
     public SortByHand2() {
@@ -99,56 +126,30 @@ class SortByHand2 implements Comparator<Hand>{
         types.add(Type.HIGH_CARD);
         types.add(Type.ERROR);
 
-        this.strengthRanking = new ArrayList<>();
-        strengthRanking.add("A");
-        strengthRanking.add("K");
-        strengthRanking.add("Q");
-        strengthRanking.add("T");
-        strengthRanking.add("9");
-        strengthRanking.add("8");
-        strengthRanking.add("7");
-        strengthRanking.add("6");
-        strengthRanking.add("5");
-        strengthRanking.add("4");
-        strengthRanking.add("3");
-        strengthRanking.add("2");
-        strengthRanking.add("J");
+        sortByStrength = new SortByStrength2();
 
     }
 
     @Override
     public int compare(Hand o1, Hand o2) {
         int result = types.indexOf(o2.getType()) - types.indexOf(o1.getType());
-        if (result!=0)
+        if (result != 0)
             return result;
 
         CamelCard[] o1Cards = o1.getCards();
         CamelCard[] o2Cards = o2.getCards();
 
-        StringBuilder sb = new StringBuilder();
-
-        for (int i = 0; i < 5; i++)
-            sb.append(o1Cards[i]);
-        sb.append(" vs ");
-        for (int i = 0; i < 5; i++)
-            sb.append(o2Cards[i]);
-
-        System.out.println(sb);
-
-
         for (int i = 0; i < 5; i++) {
-            result = strengthRanking.indexOf(o2Cards[i].getStrength()) - strengthRanking.indexOf(o1Cards[i].getStrength());
-
-            if(result!=0){
+            result = sortByStrength.compare(o1Cards[i].getStrength(), o2Cards[i].getStrength());
+            if (result != 0)
                 return result;
-            }
         }
         return result;
     }
 }
 
 
-class CamelCard{
+class CamelCard {
     private String strength;
 
     public CamelCard(String strength) {
@@ -165,13 +166,14 @@ class CamelCard{
     }
 }
 
-class Hand{
+class Hand {
     private CamelCard[] cards;
     private long bet;
     private Type type;
 
+
     public Hand(String line) {
-        Map<String,Integer> counts = new HashMap<>();
+        Map<String, Integer> counts = new HashMap<>();
         cards = new CamelCard[5];
         String[] parts = line.split("\\s+");
         String[] rawCards = parts[0].split("");
@@ -180,16 +182,50 @@ class Hand{
         for (int i = 0; i < 5; i++) {
             cards[i] = new CamelCard(rawCards[i]);
             if (counts.containsKey(rawCards[i]))
-                counts.replace(rawCards[i],counts.get(rawCards[i])+1);
+                counts.replace(rawCards[i], counts.get(rawCards[i]) + 1);
             else
-                counts.put(rawCards[i],1);
+                counts.put(rawCards[i], 1);
         }
-        type = setType(counts);
+        // part 1
+        //type = setType(counts);
+        //part 2
+        type = adjustCount(counts);
     }
 
-    public Type setType(Map<String,Integer> counts){
 
-        switch (counts.values().size()){
+    public Type adjustCount(Map<String, Integer> counts) {
+
+        Integer jCount = counts.remove("J");
+        if (jCount != null) {
+            if (jCount == 5)
+                counts.put("A", 5);
+            else {
+                SortByStrength2 sortByStrength2 = new SortByStrength2();
+                String bestCardStrength = "J";
+                int bestCardCount = 1;
+
+                for (String strength : counts.keySet()) {
+                    if (counts.get(strength) > bestCardCount) {
+                        bestCardStrength = strength;
+                        bestCardCount = counts.get(strength);
+                    } else if (counts.get(strength) == bestCardCount) {
+                        if (sortByStrength2.compare(strength, bestCardStrength) > 0) {
+                            bestCardCount = counts.get(strength);
+                            bestCardStrength = strength;
+                        }
+                    }
+                }
+                counts.replace(bestCardStrength, bestCardCount + jCount);
+            }
+        }
+
+        return setType(counts);
+    }
+
+    public Type setType(Map<String, Integer> counts) {
+
+
+        switch (counts.values().size()) {
             case 1:
                 return Type.FIVE_OF_A_KIND;
             case 2:
@@ -223,10 +259,10 @@ class Hand{
     @Override
     public String toString() {
         StringBuilder sb = new StringBuilder();
-        for (CamelCard card : cards){
+        for (CamelCard card : cards) {
             sb.append(card.getStrength());
         }
-        sb.append("-"+bet+"-"+type);
+        sb.append("-" + bet + "-" + type);
         return sb.toString();
     }
 }
@@ -240,29 +276,28 @@ public class CamelCards {
         BufferedReader bufferedReader = new BufferedReader(new InputStreamReader(System.in));
         String line;
 
-        while (!(line=bufferedReader.readLine()).isEmpty()){
-            String[] parts = line.split("\\s+");
+        while (!(line = bufferedReader.readLine()).isEmpty()) {
             hands.add(new Hand(line));
         }
 
         System.out.println(hands);
-
-        hands.sort(new SortByHand());
+        //part 1
+        //hands.sort(new SortByHand());
+        //part 2
+        hands.sort(new SortByHand2());
 
         System.out.println(hands);
 
         long sum = 0;
 
-        for (Hand hand : hands){
-            System.out.println(hand.getBet()+" * "+(hands.indexOf(hand)+1));
+        for (Hand hand : hands) {
+            System.out.println(hand + " " + hand.getBet() + " * " + (hands.indexOf(hand) + 1));
 
-            long prod = hand.getBet() * (hands.indexOf(hand)+1);
+            long prod = hand.getBet() * (hands.indexOf(hand) + 1);
             sum += prod;
         }
 
         System.out.println(sum);
-
-
     }
 
 }
